@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
 import {
   AppBar as Win95AppBar,
   Toolbar,
@@ -16,7 +17,8 @@ const Wrapper = styled.div`
 `
 
 const AppBar = ({ cartCount, onCategoryFilter, onNameFilter }) => {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
 
   const categories = [
     {
@@ -63,7 +65,8 @@ const AppBar = ({ cartCount, onCategoryFilter, onNameFilter }) => {
                 position: 'absolute',
                 left: '0',
                 top: '100%',
-                width: '150px'
+                width: '150px',
+                zIndex: '999',
               }}
               onClick={() => setOpen(false)}
             >
@@ -73,7 +76,7 @@ const AppBar = ({ cartCount, onCategoryFilter, onNameFilter }) => {
                 </span>
                 My orders
               </ListItem>
-              <ListItem>
+              <ListItem onClick={() => navigate('/cart')}>
                 <span role="img" aria-label="🛎">
                   🛒
                 </span>
@@ -90,7 +93,7 @@ const AppBar = ({ cartCount, onCategoryFilter, onNameFilter }) => {
               ))}
             </List>
           )}
-          <TextField placeholder="Search..." width={150} onChange={onNameFilter} />
+          <TextField placeholder="Search..." width={150} onChange={onNameFilter}/>
         </Toolbar>
       </Win95AppBar>
     </Wrapper>

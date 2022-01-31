@@ -3,10 +3,11 @@ import styled from 'styled-components'
 
 import { listMenuItems } from '../../services/menu'
 
-import AppBar from '../../components/AppBar'
 import MenuItem from '../../components/MenuItem'
 import Loading from '../../components/Loading'
 import Error from '../../components/Error'
+
+import AppBar from './AppBar'
 
 const Wrapper = styled.div`
   height: 100vh;
