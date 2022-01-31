@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import { Routes, Route } from 'react-router-dom'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { styleReset } from 'react95'
@@ -26,21 +27,27 @@ const GlobalStyles = createGlobalStyle`
 
   body {
     font-family: 'ms_sans_serif';
+    background: ${original.desktopBackground};
   }
 
   ${styleReset}
 `
 
+const Main = styled.div`
+  height: 100vh;
+  width: 100vw;
+`
+
 function App () {
   return (
-    <div>
+    <Main>
       <GlobalStyles/>
       <ThemeProvider theme={original}>
         <Routes>
           <Route path="/" element={<Home />}/>
         </Routes>
       </ThemeProvider>
-    </div>
+    </Main>
   )
 }
 

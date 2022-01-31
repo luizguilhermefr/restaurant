@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import {
   AppBar as Win95AppBar,
@@ -14,10 +15,15 @@ const Wrapper = styled.div`
   padding-bottom: 5rem;
 `
 
-const AppBar = () => {
+const AppBar = ({ onCategoryFilter, onNameFilter }) => {
   const [open, setOpen] = React.useState(false)
 
   const categories = [
+    {
+      id: null,
+      icon: '🍽',
+      name: 'All categories'
+    },
     {
       id: 1,
       icon: '🥖',
@@ -37,55 +43,57 @@ const AppBar = () => {
 
   return (
     <Wrapper>
-      <Win95AppBar>
+      <Win95AppBar fixed={false}>
         <Toolbar style={{ justifyContent: 'space-between' }}>
-          <div style={{ position: 'relative', display: 'inline-block' }}>
-            <Button
-              onClick={() => setOpen(!open)}
-              active={open}
-              style={{ fontWeight: 'bold' }}
+          <Button
+            onClick={() => setOpen(!open)}
+            active={open}
+            style={{ fontWeight: 'bold' }}
+          >
+            <img
+              src="/logo.png"
+              alt="react95 logo"
+              style={{ height: '20px', marginRight: 4 }}
+            />
+            Start
+          </Button>
+          {open && (
+            <List
+              style={{
+                position: 'absolute',
+                left: '0',
+                top: '100%',
+                width: '150px'
+              }}
+              onClick={() => setOpen(false)}
             >
-              <img
-                src="/logo.png"
-                alt="react95 logo"
-                style={{ height: '20px', marginRight: 4 }}
-              />
-              Start
-            </Button>
-            {open && (
-              <List
-                style={{
-                  position: 'absolute',
-                  left: '0',
-                  top: '100%',
-                  width: '130px'
-                }}
-                onClick={() => setOpen(false)}
-              >
-                <ListItem>
+              <ListItem>
                 <span role="img" aria-label="🛎">
                   🛎
                 </span>
-                  My orders
+                My orders
+              </ListItem>
+              <Divider/>
+              {categories.map(category => (
+                <ListItem key={category.id} onClick={() => onCategoryFilter(category.id)}>
+                    <span role="img" aria-label={category.icon}>
+                      {category.icon}
+                    </span>
+                  {category.name}
                 </ListItem>
-                <Divider/>
-                {categories.map(category => (
-                  <ListItem key={category.id}>
-                  <span role="img" aria-label={category.icon}>
-                    {category.icon}
-                  </span>
-                    {category.name}
-                  </ListItem>
-                ))}
-              </List>
-            )}
-          </div>
-
-          <TextField placeholder="Search..." width={150}/>
+              ))}
+            </List>
+          )}
+          <TextField placeholder="Search..." width={150} onChange={onNameFilter} />
         </Toolbar>
       </Win95AppBar>
     </Wrapper>
   )
+}
+
+AppBar.propTypes = {
+  onCategoryFilter: PropTypes.func.isRequired,
+  onNameFilter: PropTypes.func.isRequired,
 }
 
 export default AppBar
