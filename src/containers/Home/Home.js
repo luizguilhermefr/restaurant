@@ -45,7 +45,11 @@ const Home = () => {
   }, [])
 
   const handleCategoryFilter = categoryId => {
-    setFilteredItems(items.filter(item => item.category.id === categoryId))
+    if (categoryId === null) {
+      setFilteredItems([...items])
+    } else {
+      setFilteredItems(items.filter(item => item.category.id === categoryId))
+    }
   }
 
   const handleNameFilter = e => {
