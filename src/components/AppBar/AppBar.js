@@ -15,7 +15,7 @@ const Wrapper = styled.div`
   padding-bottom: 5rem;
 `
 
-const AppBar = ({ onCategoryFilter, onNameFilter }) => {
+const AppBar = ({ cartCount, onCategoryFilter, onNameFilter }) => {
   const [open, setOpen] = React.useState(false)
 
   const categories = [
@@ -73,6 +73,12 @@ const AppBar = ({ onCategoryFilter, onNameFilter }) => {
                 </span>
                 My orders
               </ListItem>
+              <ListItem>
+                <span role="img" aria-label="🛎">
+                  🛒
+                </span>
+                My cart {cartCount > 0 && `(${cartCount})`}
+              </ListItem>
               <Divider/>
               {categories.map(category => (
                 <ListItem key={category.id} onClick={() => onCategoryFilter(category.id)}>
@@ -92,6 +98,7 @@ const AppBar = ({ onCategoryFilter, onNameFilter }) => {
 }
 
 AppBar.propTypes = {
+  cartCount: PropTypes.number,
   onCategoryFilter: PropTypes.func.isRequired,
   onNameFilter: PropTypes.func.isRequired,
 }

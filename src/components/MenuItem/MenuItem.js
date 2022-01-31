@@ -9,20 +9,20 @@ const Picture = styled.img`
   display: block;
 `
 
-const MenuItem = ({ name, image }) => {
+const MenuItem = ({ item, onAddCart, cartQuantity }) => {
   return (
     <Window style={{ maxWidth: '300px' }}>
       <WindowHeader>
-        {name}
+        {item.name}
       </WindowHeader>
       <Toolbar noPadding>
-        <Button variant="menu">
-          Add to cart
+        <Button variant="menu" onClick={() => onAddCart(item)}>
+          Add to cart {cartQuantity > 0 && `(${cartQuantity})`}
         </Button>
       </Toolbar>
       <WindowContent style={{ padding: '0.25rem' }}>
         <Cutout>
-          <Picture src={image} alt={name}/>
+          <Picture src={item.image.src} alt={item.name}/>
         </Cutout>
       </WindowContent>
     </Window>
@@ -30,7 +30,19 @@ const MenuItem = ({ name, image }) => {
 }
 
 MenuItem.propTypes = {
-  name: PropTypes.string.isRequired,
+  item: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    image: PropTypes.shape({
+      src: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  onAddCart: PropTypes.func.isRequired,
+  cartQuantity: PropTypes.number,
+}
+
+MenuItem.defaultProps = {
+  cartQuantity: 0,
 }
 
 export default MenuItem

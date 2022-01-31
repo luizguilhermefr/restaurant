@@ -28,6 +28,7 @@ const ItemsWrapper = styled.div`
 const Home = () => {
   const [items, setItems] = useState([])
   const [filteredItems, setFilteredItems] = useState([])
+  const [cartItems, setCartItems] = useState([])
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -55,12 +56,32 @@ const Home = () => {
     }))
   }
 
+  const handleAddItem = item => {
+    const existing = cartItems.find(existing => existing.id === item.id)
+    const builtItem = {
+      ...item,
+      quantity: existing ? (existing.quantity + 1) : 1
+    }
+    if (existing) {
+      setCartItems([...cartItems.filter(existing => existing.id !== item.id), builtItem])
+    } else {
+      setCartItems([...cartItems, builtItem])
+    }
+  }
+
+  const cartQuantity = cartItems.reduce((acc, curr) => curr.quantity + acc, 0)
+
   return (
     <Wrapper>
-      <AppBar onCategoryFilter={handleCategoryFilter} onNameFilter={handleNameFilter}/>
+      <AppBar onCategoryFilter={handleCategoryFilter} onNameFilter={handleNameFilter} cartCount={cartQuantity}/>
       {filteredItems && filteredItems.length > 0 && <ItemsWrapper>
         {filteredItems.map(item => (
-          <MenuItem name={item.name} key={item.id} image={item.image?.src}/>
+          <MenuItem
+            key={item.id}
+            item={item}
+            onAddCart={handleAddItem}
+            cartQuantity={cartItems.find(existing => existing.id === item.id)?.quantity}
+          />
         ))}
       </ItemsWrapper>}
     </Wrapper>
