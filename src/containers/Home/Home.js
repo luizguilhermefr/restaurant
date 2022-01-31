@@ -1,12 +1,25 @@
 import React, { useEffect, useState } from 'react'
-import AppBar from '../../components/AppBar'
 import styled from 'styled-components'
+
 import { listMenuItems } from '../../services/menu'
+
+import AppBar from '../../components/AppBar'
 import MenuItem from '../../components/MenuItem'
+import Loading from '../../components/Loading'
+import Error from '../../components/Error'
 
 const Wrapper = styled.div`
   height: 100vh;
   margin: 0;
+`
+
+const MetaResultWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 `
 
 const ItemsWrapper = styled.div`
@@ -29,20 +42,27 @@ const Home = () => {
   const [items, setItems] = useState([])
   const [filteredItems, setFilteredItems] = useState([])
   const [cartItems, setCartItems] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     const fetchItems = async () => {
+      setLoading(true)
       try {
         const data = await listMenuItems()
+        setError(false)
         setItems(data)
         setFilteredItems(data)
       } catch (e) {
+        setError(true)
         console.error(e)
+      } finally {
+        setLoading(false)
       }
     }
 
     fetchItems()
-  }, [])
+  }, [setItems, setFilteredItems, setLoading])
 
   const handleCategoryFilter = categoryId => {
     if (categoryId === null) {
@@ -78,6 +98,16 @@ const Home = () => {
   return (
     <Wrapper>
       <AppBar onCategoryFilter={handleCategoryFilter} onNameFilter={handleNameFilter} cartCount={cartQuantity}/>
+      {loading && (
+        <MetaResultWrapper>
+          <Loading/>
+        </MetaResultWrapper>
+      )}
+      {error && (
+        <MetaResultWrapper>
+          <Error/>
+        </MetaResultWrapper>
+      )}
       {filteredItems && filteredItems.length > 0 && <ItemsWrapper>
         {filteredItems.map(item => (
           <MenuItem
