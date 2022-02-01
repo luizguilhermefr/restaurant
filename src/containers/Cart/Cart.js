@@ -91,7 +91,7 @@ const Cart = () => {
       errors.push('Verification code is not valid.')
     }
 
-    if (!/^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$/.test(expiryDate)) {
+    if (!/^(0[1-9]|1[0-2])\/([0-9]{4}|[0-9]{2})$/.test(expiryDate)) {
       errors.push('Expiry date is invalid, please use MM/YY format.')
     }
 
