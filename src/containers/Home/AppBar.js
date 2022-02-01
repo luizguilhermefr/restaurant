@@ -70,7 +70,7 @@ const AppBar = ({ cartCount, onCategoryFilter, onNameFilter }) => {
               }}
               onClick={() => setOpen(false)}
             >
-              <ListItem>
+              <ListItem onClick={() => navigate('/orders')}>
                 <span role="img" aria-label="🛎">
                   🛎
                 </span>

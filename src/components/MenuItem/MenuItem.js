@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { Button, Cutout, Toolbar, Window, WindowContent, WindowHeader } from 'react95'
 
+import formatCurrency from '../../utils/formatCurrency'
+
 const Picture = styled.img`
   width: 300px;
   height: 300px;
@@ -13,7 +15,7 @@ const MenuItem = ({ item, onAddCart, cartQuantity }) => {
   return (
     <Window style={{ maxWidth: '300px' }}>
       <WindowHeader>
-        {item.name}
+        {`${item.name} (${formatCurrency(item.price)})`}
       </WindowHeader>
       <Toolbar noPadding>
         <Button variant="menu" onClick={() => onAddCart(item)}>

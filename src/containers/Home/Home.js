@@ -66,7 +66,7 @@ const Home = () => {
     }
 
     fetchItems()
-  }, [setItems, setFilteredItems, setLoading])
+  }, [setItems, setFilteredItems, setLoading, setError])
 
   const handleCategoryFilter = categoryId => {
     if (categoryId === null) {

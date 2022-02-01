@@ -27,9 +27,12 @@ export const postAPI = (url, payload, headers = false) => {
 
 const listMenuItems = () => getAPI('/menu/items/')
 
+const listOrders = () => getAPI('/menu/orders/')
+
 const createOrder = data => postAPI('/menu/orders/', data)
 
 export {
   listMenuItems,
+  listOrders,
   createOrder
 }

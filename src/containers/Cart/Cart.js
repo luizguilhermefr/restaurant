@@ -1,58 +1,16 @@
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { Button, Fieldset, Tab, TabBody, Tabs, TextField, Tooltip, Window, WindowContent, WindowHeader } from 'react95'
+import { Button, Fieldset, Tab, TabBody, Tabs, TextField, Tooltip } from 'react95'
+
 import { CartContext } from '../../context/CartContext'
-import { createOrder, listMenuItems } from '../../services/menu'
+
+import { createOrder } from '../../services/menu'
+import formatCurrency from '../../utils/formatCurrency'
+
 import Loading from '../../components/Loading'
 import Error from '../../components/Error'
-
-const Wrapper = styled.div`
-  padding: 5rem;
-
-  .window-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .close-icon {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    margin-left: -1px;
-    margin-top: -1px;
-    transform: rotateZ(45deg);
-    position: relative;
-
-    &:before,
-    &:after {
-      content: '';
-      position: absolute;
-      background: #000;
-    }
-
-    &:before {
-      height: 100%;
-      width: 3px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    &:after {
-      height: 3px;
-      width: 100%;
-      left: 0px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-  }
-
-  .window {
-    width: 100%;
-    min-height: 200px;
-  }
-`
+import Window from '../../components/Window'
 
 const Items = styled.div`
   //
@@ -112,6 +70,7 @@ const Cart = () => {
         credit_card_exp_date: expiryDate,
         items: cart.items.map(item => ({ item: item.id, quantity: item.quantity }))
       })
+      cart.setItems([])
       setError(false)
       navigate('/orders')
     } catch (e) {
@@ -144,68 +103,58 @@ const Cart = () => {
   }
 
   return (
-    <Wrapper>
-      <Window className="window">
-        <WindowHeader className="window-header">
-          <span>cart.exe</span>
-          <Button onClick={() => navigate(-1)}>
-            <span className="close-icon"/>
-          </Button>
-        </WindowHeader>
-        <WindowContent>
-          <Tabs value={tab} onChange={handleChangeTab}>
-            <Tab value={0}>Items</Tab>
-            <Tab value={1} disabled={cartIsEmpty}>Payment</Tab>
-          </Tabs>
-          <TabBody>
-            {tab === 0 && (
-              <Items>
-                {cartIsEmpty && 'No items in cart yet.'}
-                {cart.items.map(item => (
-                  <Fieldset label={`Qty: ${item.quantity}`}>
-                    {item.name}
-                  </Fieldset>
-                ))}
-              </Items>
-            )}
-            {tab === 1 && (
-              submitting ? (
-                <MetaResultWrapper>
-                  <Loading/>
-                </MetaResultWrapper>
-              ) : (
-                <PaymentForm>
-                  <Tooltip text="Only Mastercard allowed!" enterDelay={100} leaveDelay={500}>
-                    <TextField
-                      placeholder="Credit card number"
-                      value={creditCardNumber}
-                      onChange={handleChangeCreditCardNumber}
-                      fullWidth
-                    />
-                  </Tooltip>
-                  <TextField
-                    placeholder="Verification code (XXX)"
-                    value={verificationCode}
-                    onChange={handleChangeVerificationCode}
-                    fullWidth
-                  />
-                  <TextField
-                    placeholder="Expiry date (MM/YY)"
-                    value={expiryDate}
-                    onChange={handleChangeExpiryDate}
-                    fullWidth
-                  />
-                  {validationErrors.map(error => (
-                    <p key={error}>{error}</p>
-                  ))}
-                  <Button fullWidth onClick={handleSubmit}>💸 Place order</Button>
-                  {error && <Error/>}
-                </PaymentForm>
+    <Window title="cart.exe" onClose={() => navigate(-1)}>
+      <Tabs value={tab} onChange={handleChangeTab}>
+        <Tab value={0}>Items</Tab>
+        <Tab value={1} disabled={cartIsEmpty}>Payment</Tab>
+      </Tabs>
+      <TabBody>
+        {tab === 0 && (
+          <Items>
+            {cartIsEmpty && 'No items in cart yet.'}
+            {cart.items.map(item => (
+              <Fieldset key={item.id} label={`Qty: ${item.quantity}`}>
+                {`${item.name} (${formatCurrency(item.price)} each)`}
+              </Fieldset>
+            ))}
+          </Items>
+        )}
+        {tab === 1 && (
+          submitting ? (
+            <MetaResultWrapper>
+              <Loading/>
+            </MetaResultWrapper>
+          ) : (
+            <PaymentForm>
+              <Tooltip text="Only Mastercard allowed!" enterDelay={100} leaveDelay={500}>
+                <TextField
+                  placeholder="Credit card number"
+                  value={creditCardNumber}
+                  onChange={handleChangeCreditCardNumber}
+                  fullWidth
+                />
+              </Tooltip>
+              <TextField
+                placeholder="Verification code (XXX)"
+                value={verificationCode}
+                onChange={handleChangeVerificationCode}
+                fullWidth
+              />
+              <TextField
+                placeholder="Expiry date (MM/YY)"
+                value={expiryDate}
+                onChange={handleChangeExpiryDate}
+                fullWidth
+              />
+              {validationErrors.map(error => (
+                <p key={error}>{error}</p>
               ))}
-          </TabBody>
-        </WindowContent>
-      </Window>
-    </Wrapper>
+              <Button fullWidth onClick={handleSubmit}>💸 Place order</Button>
+              {error && <Error/>}
+            </PaymentForm>
+          ))}
+      </TabBody>
+    </Window>
   )
 }
 
