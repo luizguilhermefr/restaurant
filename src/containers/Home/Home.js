@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import styled from 'styled-components'
 
 import { listMenuItems } from '../../services/menu'
+
+import { CartContext } from '../../context/CartContext'
 
 import MenuItem from '../../components/MenuItem'
 import Loading from '../../components/Loading'
@@ -42,9 +44,10 @@ const ItemsWrapper = styled.div`
 const Home = () => {
   const [items, setItems] = useState([])
   const [filteredItems, setFilteredItems] = useState([])
-  const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
+
+  const cart = useContext(CartContext)
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -82,19 +85,19 @@ const Home = () => {
   }
 
   const handleAddItem = item => {
-    const existing = cartItems.find(existing => existing.id === item.id)
+    const existing = cart.items.find(existing => existing.id === item.id)
     const builtItem = {
       ...item,
       quantity: existing ? (existing.quantity + 1) : 1
     }
     if (existing) {
-      setCartItems([...cartItems.filter(existing => existing.id !== item.id), builtItem])
+      cart.setItems([...cart.items.filter(existing => existing.id !== item.id), builtItem])
     } else {
-      setCartItems([...cartItems, builtItem])
+      cart.setItems([...cart.items, builtItem])
     }
   }
 
-  const cartQuantity = cartItems.reduce((acc, curr) => curr.quantity + acc, 0)
+  const cartQuantity = cart.items.reduce((acc, curr) => curr.quantity + acc, 0)
 
   return (
     <Wrapper>
@@ -115,7 +118,7 @@ const Home = () => {
             key={item.id}
             item={item}
             onAddCart={handleAddItem}
-            cartQuantity={cartItems.find(existing => existing.id === item.id)?.quantity}
+            cartQuantity={cart.items.find(existing => existing.id === item.id)?.quantity}
           />
         ))}
       </ItemsWrapper>}

@@ -10,6 +10,7 @@ import ms_sans_serif_bold from 'react95/dist/fonts/ms_sans_serif_bold.woff2'
 
 import Home from './containers/Home'
 import Cart from './containers/Cart'
+import { CartContextProvider } from './context/CartContext'
 
 const GlobalStyles = createGlobalStyle`
   @font-face {
@@ -44,10 +45,12 @@ function App () {
     <Main>
       <GlobalStyles/>
       <ThemeProvider theme={original}>
-        <Routes>
-          <Route path="/" element={<Home />}/>
-          <Route path="/cart" element={<Cart />}/>
-        </Routes>
+        <CartContextProvider>
+          <Routes>
+            <Route path="/" element={<Home/>}/>
+            <Route path="/cart" element={<Cart/>}/>
+          </Routes>
+        </CartContextProvider>
       </ThemeProvider>
     </Main>
   )
