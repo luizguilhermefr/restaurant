@@ -8,9 +8,11 @@ import original from 'react95/dist/themes/original'
 import ms_sans_serif from 'react95/dist/fonts/ms_sans_serif.woff2'
 import ms_sans_serif_bold from 'react95/dist/fonts/ms_sans_serif_bold.woff2'
 
+import { CartContextProvider } from './context/CartContext'
+
 import Home from './containers/Home'
 import Cart from './containers/Cart'
-import { CartContextProvider } from './context/CartContext'
+import Orders from './containers/Orders'
 
 const GlobalStyles = createGlobalStyle`
   @font-face {
@@ -49,6 +51,7 @@ function App () {
           <Routes>
             <Route path="/" element={<Home/>}/>
             <Route path="/cart" element={<Cart/>}/>
+            <Route path="/orders" element={<Orders/>}/>
           </Routes>
         </CartContextProvider>
       </ThemeProvider>

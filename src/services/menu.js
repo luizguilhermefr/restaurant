@@ -17,8 +17,19 @@ export const getAPI = (url, cancel = {}) => {
   return axios.get(url, getConfig).then(res => res.data)
 }
 
+export const postAPI = (url, payload, headers = false) => {
+  const headerConfig = { ...config }
+  if (headers) {
+    headerConfig.headers['Content-Type'] = 'application/json'
+  }
+  return axios.post(url, payload, headerConfig).then(res => res.data)
+}
+
 const listMenuItems = () => getAPI('/menu/items/')
 
+const createOrder = data => postAPI('/menu/orders/', data)
+
 export {
-  listMenuItems
+  listMenuItems,
+  createOrder
 }
